@@ -12,8 +12,6 @@ class RedirectIfAuthenticated
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
@@ -21,6 +19,27 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                
+                // Prioritas 1: Jika guard 'admin' -> redirect ke dashboard admin
+                if ($guard === 'admin') {
+                    return redirect()->route('admin.dashboard');
+                }
+
+                // Jika guard 'partner' → redirect ke dashboard partner
+                if ($guard === 'partner') {
+                    return redirect()->route('partner.dashboard');
+                }
+                
+                // Prioritas 2: Jika guard 'web' (user biasa)
+                if ($guard === 'web' || $guard === null) {
+                    // Jangan redirect jika sedang akses halaman admin
+                    if ($request->is('admin/*')) {
+                        return $next($request);
+                    }
+                    return redirect('/');
+                }
+                
+                // Fallback default
                 return redirect(RouteServiceProvider::HOME);
             }
         }

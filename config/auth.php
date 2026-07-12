@@ -35,12 +35,24 @@ return [
     |
     */
 
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
+'guards' => [
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
     ],
+
+    // KHUSUS  (Guard khusus Admin):
+    'admin' => [
+        'driver' => 'session',
+        'provider' => 'admins',
+    ],
+
+    // KHUSUS (Guard khusus Mitra/Partner):
+    'partner' => [
+        'driver' => 'session',
+        'provider' => 'partners',
+    ],
+],
 
     /*
     |--------------------------------------------------------------------------
@@ -59,18 +71,22 @@ return [
     |
     */
 
-    'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+'providers' => [
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
     ],
-
+    // KHUSUS ADMIN (Provider untuk Admin):
+     'admins' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Admin::class,  // Ganti dari User ke Admin
+    ],
+    // KHUSUS MITRA (Provider untuk Mitra/Partner):
+    'partners' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Partner::class,
+    ],
+],
     /*
     |--------------------------------------------------------------------------
     | Resetting Passwords
